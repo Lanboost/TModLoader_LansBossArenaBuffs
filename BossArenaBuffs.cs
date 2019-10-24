@@ -5,10 +5,10 @@ using Terraria.ModLoader;
 namespace BossArenaBuffs
 {
 
-	class BossItemType
+	public class BossItemType
 	{
-		string name;
-		int count;
+		public string name;
+		public int count;
 
 		public BossItemType(string name, int count)
 		{
@@ -17,19 +17,12 @@ namespace BossArenaBuffs
 		}
 	}
 
-	class BossItemDef
-	{
-		BossItemType[] bossItemTypes;
-	}
-
-	class BossItem : ModItem
+	public class BossItem : ModItem
 	{
 		string tile;
-		BossItemType[] bossItemTypes;
-		public BossItem(string tile, BossItemType[] bossItemTypes)
+		public BossItem(string tile)
 		{
 			this.tile = tile;
-			this.bossItemTypes = bossItemTypes;
 		}
 
 		public override string Texture => (GetType().Namespace + "." + "BossItem").Replace('.', '/');
@@ -64,14 +57,22 @@ namespace BossArenaBuffs
 	{
 
 		public static BossArenaBuffs instance;
-
-		public List<BossItemDef> items = new List<BossItemDef>();
+		
 
 		public BossArenaBuffs()
 		{
 			instance = this;
+			
+		}
+
+		public void add(string name, ModTileEntity tileEntity, int width, int height, string texture)
+		{
+			this.AddTileEntity(name, tileEntity);
 
 
+			this.AddTile(name, new BossTile(name, width, height, name), texture);
+
+			AddItem(name, new BossItem(name));
 
 		}
 
@@ -80,36 +81,47 @@ namespace BossArenaBuffs
 			base.Load();
 
 
-			AddItemToTiles(new BossItemType("Heart lantern", 1));
-			AddItemToTiles(new BossItemType("Sun Flower", 1));
-			AddItemToTiles(new BossItemType("Honey Bucket", 1));
-			AddItemToTiles(new BossItemType("Campfire", 1));
+			this.add("Small camp", new BossTileEntity1(), 7, 4, "BossArenaBuffs/tile1");
 
-			for (int i = 0; i < 5; i++)
-			{
-				AddItemToTiles(new BossItemType("Heart statue", 1));
-			}
+			this.add("Medium camp", new BossTileEntity2(), 7, 4, "BossArenaBuffs/tile2");
 
-			for (int i = 0; i < 5; i++)
-			{
-				AddItemToTiles(new BossItemType("Star statue", 1));
-			}
+			this.add("Large camp", new BossTileEntity3(), 9, 4, "BossArenaBuffs/tile3");
 
-			AddItems();
-
-			AddItem("BossTile1", new BossItem("BossTile"));
-			AddItem("BossTile2", new BossItem("BossTile"));
-			AddItem("BossTile3", new BossItem("BossTile"));
+			this.add("Large camp (2x Heart)", new BossTileEntity4(), 9, 4, "BossArenaBuffs/tile3");
 
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(this);
-			recipe.AddIngredient(ItemID.DirtBlock);
-			recipe.SetResult(this, "BossTile1");
+			var recipe = new ModRecipe(this);
+			recipe.AddIngredient(ItemID.Campfire);
+			recipe.AddIngredient(ItemID.Sunflower);
+			recipe.AddIngredient(ItemID.StarinaBottle);
+			recipe.AddIngredient(ItemID.HeartLantern);
+			recipe.SetResult(this, "Small camp");
 			recipe.AddRecipe();
 
+			recipe = new ModRecipe(this);
+			recipe.AddIngredient(this.GetItem("Small camp"));
+			recipe.AddIngredient(ItemID.HoneyBucket);
+			recipe.SetResult(this, "Medium camp");
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(this);
+			recipe.AddIngredient(this.GetItem("Medium camp"));
+			recipe.AddIngredient(ItemID.HeartStatue);
+			recipe.SetResult(this, "Large camp");
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(this);
+			recipe.AddIngredient(this.GetItem("Large camp"));
+			recipe.AddIngredient(ItemID.HeartStatue);
+			recipe.SetResult(this, "Large camp (2x Heart)");
+			recipe.AddRecipe();
+
+
+
+			/*
 
 			recipe = new ModRecipe(this);
 			recipe.AddIngredient(this, "BossTile1");
@@ -121,7 +133,7 @@ namespace BossArenaBuffs
 			recipe.AddIngredient(this, "BossTile2");
 			recipe.AddIngredient(ItemID.DirtBlock);
 			recipe.SetResult(this, "BossTile3");
-			recipe.AddRecipe();
+			recipe.AddRecipe();*/
 		}
 	}
 }

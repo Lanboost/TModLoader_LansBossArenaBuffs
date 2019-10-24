@@ -1,3 +1,6 @@
-displayName = BossArenaBuffs
+displayName = Lan's Boss Arena Buffs
 author = Lanboost
 version = 0.1
+includePDB = true
+includeSource = true
+homepage = https://github.com/Lanboost/TModLoader_LansBossArenaBuffs
