@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.ObjectData;
 
-namespace BossArenaBuffs
+namespace LansBossArenaBuffs
 {
 
 
@@ -99,7 +99,7 @@ namespace BossArenaBuffs
 
 		public override bool ValidTile(int i, int j)
 		{
-			return adapter.ValidTile(i, j, mod.TileType<BossTile>());
+			return adapter.ValidTile(i, j, ModContent.TileType<BossTile>());
 		}
 
 		public override void Update()
@@ -134,7 +134,7 @@ namespace BossArenaBuffs
 
 		public override bool ValidTile(int i, int j)
 		{
-			return adapter.ValidTile(i, j, mod.TileType<BossTile>());
+			return adapter.ValidTile(i, j, ModContent.TileType<BossTile>());
 		}
 
 		public override void Update()
@@ -170,7 +170,7 @@ namespace BossArenaBuffs
 
 		public override bool ValidTile(int i, int j)
 		{
-			return adapter.ValidTile(i, j, mod.TileType<BossTile>());
+			return adapter.ValidTile(i, j, ModContent.TileType<BossTile>());
 		}
 
 		public override void Update()
@@ -206,7 +206,7 @@ namespace BossArenaBuffs
 
 		public override bool ValidTile(int i, int j)
 		{
-			return adapter.ValidTile(i, j, mod.TileType<BossTile>());
+			return adapter.ValidTile(i, j, ModContent.TileType<BossTile>());
 		}
 
 		public override void Update()

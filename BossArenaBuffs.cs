@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace BossArenaBuffs
+namespace LansBossArenaBuffs
 {
 
 	public class BossItemType
@@ -53,13 +53,13 @@ namespace BossArenaBuffs
 
 
 
-	public class BossArenaBuffs : Mod
+	public class LansBossArenaBuffs : Mod
 	{
 
-		public static BossArenaBuffs instance;
+		public static LansBossArenaBuffs instance;
 		
 
-		public BossArenaBuffs()
+		public LansBossArenaBuffs()
 		{
 			instance = this;
 			
@@ -81,13 +81,13 @@ namespace BossArenaBuffs
 			base.Load();
 
 
-			this.add("Small camp", new BossTileEntity1(), 7, 4, "BossArenaBuffs/tile1");
+			this.add("Small camp", new BossTileEntity1(), 7, 4, "LansBossArenaBuffs/tile1");
 
-			this.add("Medium camp", new BossTileEntity2(), 7, 4, "BossArenaBuffs/tile2");
+			this.add("Medium camp", new BossTileEntity2(), 7, 4, "LansBossArenaBuffs/tile2");
 
-			this.add("Large camp", new BossTileEntity3(), 9, 4, "BossArenaBuffs/tile3");
+			this.add("Large camp", new BossTileEntity3(), 9, 4, "LansBossArenaBuffs/tile3");
 
-			this.add("Large camp (2x Heart)", new BossTileEntity4(), 9, 4, "BossArenaBuffs/tile3");
+			this.add("Large camp (2x Heart)", new BossTileEntity4(), 9, 4, "LansBossArenaBuffs/tile3");
 
 		}
 
