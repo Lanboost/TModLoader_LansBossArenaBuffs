@@ -72,20 +72,12 @@ namespace LansBossArenaBuffs
 		
 	}
 
-
-
-	public class BossTileEntity1:ModTileEntity
+	public class BossTileEntity: ModTileEntity
 	{
-		BossTileEntityAdapter adapter;
-		public BossTileEntity1()
-		{
-			adapter = new BossTileEntityAdapter(new BossItemType[] {
-				new BossItemType("campfire", 1),
-				new BossItemType("sunflower", 1),
-				new BossItemType("heartlantern", 1),
-				new BossItemType("starinabottle", 1),
-			});
-		}
+		public BossTileEntityAdapter adapter;
+		public int width;
+		public int height;
+		public string tileName;
 
 		public override bool Autoload(ref string name)
 		{
@@ -94,12 +86,19 @@ namespace LansBossArenaBuffs
 
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
 		{
+			if (Main.netMode == NetmodeID.MultiplayerClient)
+			{
+				NetMessage.SendTileRange(Main.myPlayer, i, j, width, height);
+				NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
+				return -1;
+			}
+
 			return Place(i, j);
 		}
 
 		public override bool ValidTile(int i, int j)
 		{
-			return adapter.ValidTile(i, j, ModContent.TileType<BossTile>());
+			return adapter.ValidTile(i, j, mod.GetTile(tileName).Type);
 		}
 
 		public override void Update()
@@ -108,9 +107,25 @@ namespace LansBossArenaBuffs
 		}
 	}
 
-	public class BossTileEntity2 : ModTileEntity
+	public class BossTileEntity1: BossTileEntity
 	{
-		BossTileEntityAdapter adapter;
+		public BossTileEntity1()
+		{
+			adapter = new BossTileEntityAdapter(new BossItemType[] {
+				new BossItemType("campfire", 1),
+				new BossItemType("sunflower", 1),
+				new BossItemType("heartlantern", 1),
+				new BossItemType("starinabottle", 1),
+			});
+			width = 7;
+			height = 4;
+			tileName = "Small camp";
+
+		}
+	}
+
+	public class BossTileEntity2 : BossTileEntity
+	{
 		public BossTileEntity2()
 		{
 			adapter = new BossTileEntityAdapter(new BossItemType[] {
@@ -120,32 +135,15 @@ namespace LansBossArenaBuffs
 				new BossItemType("starinabottle", 1),
 				new BossItemType("honey", 1),
 			});
-		}
 
-		public override bool Autoload(ref string name)
-		{
-			return false;
-		}
-
-		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
-		{
-			return Place(i, j);
-		}
-
-		public override bool ValidTile(int i, int j)
-		{
-			return adapter.ValidTile(i, j, ModContent.TileType<BossTile>());
-		}
-
-		public override void Update()
-		{
-			adapter.Update(Position);
+			width = 7;
+			height = 4;
+			tileName = "Medium camp";
 		}
 	}
 
-	public class BossTileEntity3 : ModTileEntity
+	public class BossTileEntity3 : BossTileEntity
 	{
-		BossTileEntityAdapter adapter;
 		public BossTileEntity3()
 		{
 			adapter = new BossTileEntityAdapter(new BossItemType[] {
@@ -156,32 +154,16 @@ namespace LansBossArenaBuffs
 				new BossItemType("honey", 1),
 				new BossItemType("heartstatue", 1),
 			});
-		}
 
-		public override bool Autoload(ref string name)
-		{
-			return false;
+			width = 9;
+			height = 4;
+			tileName = "Large camp";
 		}
-
-		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
-		{
-			return Place(i, j);
-		}
-
-		public override bool ValidTile(int i, int j)
-		{
-			return adapter.ValidTile(i, j, ModContent.TileType<BossTile>());
-		}
-
-		public override void Update()
-		{
-			adapter.Update(Position);
-		}
+		
 	}
 
-	public class BossTileEntity4 : ModTileEntity
+	public class BossTileEntity4 : BossTileEntity
 	{
-		BossTileEntityAdapter adapter;
 		public BossTileEntity4()
 		{
 			adapter = new BossTileEntityAdapter(new BossItemType[] {
@@ -192,27 +174,12 @@ namespace LansBossArenaBuffs
 				new BossItemType("honey", 1),
 				new BossItemType("heartstatue", 2),
 			});
-		}
 
-		public override bool Autoload(ref string name)
-		{
-			return false;
+			width = 9;
+			height = 4;
+			tileName = "Large camp (2x Heart)";
 		}
-
-		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
-		{
-			return Place(i, j);
-		}
-
-		public override bool ValidTile(int i, int j)
-		{
-			return adapter.ValidTile(i, j, ModContent.TileType<BossTile>());
-		}
-
-		public override void Update()
-		{
-			adapter.Update(Position);
-		}
+		
 	}
 
 
@@ -248,6 +215,12 @@ namespace LansBossArenaBuffs
 			{
 
 			}
+
+			LansBossArenaBuffs.instance.Logger.Warn("Tile valid is:");
+			LansBossArenaBuffs.instance.Logger.Warn("Tile valid is:"+ tile.active());
+			LansBossArenaBuffs.instance.Logger.Warn("Tile valid is:"+ tile.type);
+			LansBossArenaBuffs.instance.Logger.Warn("Tile valid is:"+ tileType);
+
 			return tile.active() && tile.type == tileType && tile.frameX == 0 && tile.frameY == 0;
 		}
 

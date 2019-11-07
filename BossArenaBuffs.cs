@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -17,15 +20,55 @@ namespace LansBossArenaBuffs
 		}
 	}
 
+	class LPlayer : ModPlayer
+	{
+
+		public override void PostUpdateBuffs()
+		{
+			base.PostUpdateBuffs();
+
+			foreach(var entityPos in TileEntity.ByPosition)
+			{
+				if (entityPos.Value.type == ModContent.GetInstance<BossTileEntity1>().Type ||
+					entityPos.Value.type == ModContent.GetInstance<BossTileEntity2>().Type ||
+					entityPos.Value.type == ModContent.GetInstance<BossTileEntity3>().Type || 
+					entityPos.Value.type == ModContent.GetInstance<BossTileEntity4>().Type)
+				{
+
+					var pos = entityPos.Key;
+					var coord = Main.LocalPlayer.position.ToTileCoordinates16();
+
+					var x = pos.X - coord.X + 5;
+					var y = pos.Y - coord.Y + 5;
+
+					float dist = (float)Math.Sqrt((double)(x * x + y * y));
+
+					var bTile = (BossTileEntity) entityPos.Value;
+
+					if (dist < 50)
+					{
+						bTile.adapter.ApplyBuffs(Main.LocalPlayer);
+					}
+					if (dist < 8)
+					{
+						bTile.adapter.ApplyHoneyBuffs(Main.LocalPlayer);
+					}
+				}
+			}
+		}
+	}
+
 	public class BossItem : ModItem
 	{
 		string tile;
-		public BossItem(string tile)
+		int index;
+		public BossItem(string tile, int index)
 		{
 			this.tile = tile;
+			this.index = index;
 		}
 
-		public override string Texture => (GetType().Namespace + "." + "BossItem").Replace('.', '/');
+		public override string Texture => (GetType().Namespace + "." + "BossItem"+ index).Replace('.', '/');
 
 		public override bool CloneNewInstances => true;
 
@@ -38,7 +81,7 @@ namespace LansBossArenaBuffs
 		{
 			item.width = 12;
 			item.height = 12;
-			item.maxStack = 1;
+			item.maxStack = 999;
 			item.useTurn = true;
 			item.autoReuse = false;
 			item.useAnimation = 15;
@@ -65,14 +108,14 @@ namespace LansBossArenaBuffs
 			
 		}
 
-		public void add(string name, ModTileEntity tileEntity, int width, int height, string texture)
+		public void add(string name, ModTileEntity tileEntity, int width, int height, string texture, int index)
 		{
 			this.AddTileEntity(name, tileEntity);
 
 
 			this.AddTile(name, new BossTile(name, width, height, name), texture);
 
-			AddItem(name, new BossItem(name));
+			AddItem(name, new BossItem(name, index));
 
 		}
 
@@ -81,13 +124,13 @@ namespace LansBossArenaBuffs
 			base.Load();
 
 
-			this.add("Small camp", new BossTileEntity1(), 7, 4, "LansBossArenaBuffs/tile1");
+			this.add("Small camp", new BossTileEntity1(), 7, 4, "LansBossArenaBuffs/tile1", 1);
 
-			this.add("Medium camp", new BossTileEntity2(), 7, 4, "LansBossArenaBuffs/tile2");
+			this.add("Medium camp", new BossTileEntity2(), 7, 4, "LansBossArenaBuffs/tile2", 2);
 
-			this.add("Large camp", new BossTileEntity3(), 9, 4, "LansBossArenaBuffs/tile3");
+			this.add("Large camp", new BossTileEntity3(), 9, 4, "LansBossArenaBuffs/tile3", 3);
 
-			this.add("Large camp (2x Heart)", new BossTileEntity4(), 9, 4, "LansBossArenaBuffs/tile3");
+			this.add("Large camp (2x Heart)", new BossTileEntity4(), 9, 4, "LansBossArenaBuffs/tile3", 3);
 
 		}
 
